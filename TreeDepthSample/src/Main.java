@@ -3,23 +3,26 @@ import java.util.ArrayList;
 
 public class Main {
 
-	static int[][] tree=null;
+	static Node tree;
+	static Node[] nodeArray=null;
+	
+	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		ReadInput();
-		System.out.println(treeDepth(1));
+		System.out.println(treeDepth(nodeArray[1]));
 		// System.out.println(treeDepth(root));
 
 	}
 
-	private static int treeDepth(int i) {
+	private static int treeDepth(Node parent) {
 		// TODO Auto-generated method stub
-		ArrayList<Integer> children=getChildren(i);
-		if (children.isEmpty()) {
+		
+		if (parent.children.isEmpty()) {
 			return 0;
 		}
 		int maxDepth=Integer.MIN_VALUE;
-		for (Integer subNode:children) {
+		for (Node subNode:parent.children) {
 			int depth=treeDepth(subNode);
 			if (maxDepth<depth) {
 				maxDepth=depth;
@@ -29,34 +32,44 @@ public class Main {
 		return maxDepth+1;
 	}
 
-	private static ArrayList<Integer> getChildren(int node) {
-		// TODO Auto-generated method stub
-		ArrayList<Integer> subNodes=new ArrayList<>();
-		for (int i=1;i<tree.length;i++) {
-			if (tree[node][i]==1) {
-				subNodes.add(i);
-			}
-		}
-		return subNodes;
-	}
 
 	private static void ReadInput() {
 		// TODO Auto-generated method stub
 		Scanner sc=new Scanner(System.in);
 		int lines=sc.nextInt();
 		int nodes=sc.nextInt();
-		tree=new int[nodes+1][nodes+1];
-		for (int i=0;i<nodes+1;i++) {
-			for (int j=0;j<nodes+1;j++) {
-				tree[i][j]=0;
-			}
+		nodeArray=new Node[nodes+1];
+		for (int i=0;i<nodeArray.length;i++) {
+			nodeArray[i]=null;
 		}
+		
 		for (int i=0;i<lines;i++) {
-			int n1=sc.nextInt();
-			int n2=sc.nextInt();
-			tree[n1][n2]=1;
+			int id1=sc.nextInt();
+			int id2=sc.nextInt();
+			Node n1,n2;
+			if (nodeArray[id1]==null) {
+				n1=new Node();
+				n1.id=id1;
+				nodeArray[id1]=n1;
+			} else {
+				n1=nodeArray[id1];
+			}
+			if (nodeArray[id2]==null) {
+				n2=new Node();
+				n2.id=id2;
+				nodeArray[id2]=n2;
+			} else {
+				n2=nodeArray[id2];
+			}
+			n1.children.add(n2);	
 		}
 		
 	}
 
+}
+
+
+class Node {
+	int id;
+	ArrayList<Node> children=new ArrayList<>();
 }
